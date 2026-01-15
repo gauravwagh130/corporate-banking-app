@@ -1,0 +1,192 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="header-left">
+      <div class="title-section">
+        <h1>Admin Dashboard</h1>
+
+        <p *ngIf="currentUser" class="welcome-text">
+          <mat-icon>waving_hand</mat-icon>
+          Welcome back, {{ currentUser.username }}!
+        </p>
+      </div>
+      <div class="role-badge">
+        <mat-icon>verified_user</mat-icon>
+        {{ currentUser?.role }}
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button
+        mat-icon-button
+        [matTooltip]="autoRefreshEnabled ? 'Disable auto-refresh' : 'Enable auto-refresh'"
+        (click)="toggleAutoRefresh()"
+        [color]="autoRefreshEnabled ? 'accent' : ''"
+      >
+        <mat-icon>{{ autoRefreshEnabled ? 'sync' : 'sync_disabled' }}</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        matTooltip="Refresh dashboard"
+        (click)="refreshData()"
+        [disabled]="isLoading"
+      >
+        <mat-icon [class.spinning]="isLoading">refresh</mat-icon>
+      </button>
+
+
+      <button mat-raised-button (click)="navigateToUsers()">
+        <mat-icon>group</mat-icon>
+        Manage Users
+      </button>
+    </div>
+  </div>
+
+  <div class="refresh-info" *ngIf="lastRefreshed && !isLoading">
+    <mat-icon>access_time</mat-icon>
+    <span>Last updated: {{ getTimeSinceRefresh() }}</span>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Loading dashboard data...</p>
+    <small>Please wait while we fetch the latest information</small>
+  </div>
+
+  <div *ngIf="loadingError && !isLoading" class="error-container">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <h3>Failed to Load Data</h3>
+    <p>Unable to fetch dashboard information. Please check your connection and try again.</p>
+    <button mat-raised-button color="primary" (click)="retryLoad()">
+      <mat-icon>refresh</mat-icon>
+      Retry
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading && !loadingError" class="dashboard-content">
+    <div class="overview-grid">
+      <mat-card class="stat-card users-card" (click)="navigateToUsers()">
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon class="stat-icon">group</mat-icon>
+            <span class="stat-label">Total Users</span>
+          </div>
+          <div class="stat-value">{{ stats.totalUsers }}</div>
+          <div class="stat-details">
+            <div class="detail-item">
+              <mat-icon class="small-icon success">check_circle</mat-icon>
+              <span>{{ stats.activeUsers }} Active</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon class="small-icon warn">cancel</mat-icon>
+              <span>{{ stats.inactiveUsers }} Inactive</span>
+            </div>
+          </div>
+          <div class="stat-footer">
+            <span>{{ getActiveUsersPercentage() }}% Active</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card clients-card" (click)="navigateToClients()">
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon class="stat-icon">business</mat-icon>
+            <span class="stat-label">Total Clients</span>
+          </div>
+          <div class="stat-value">{{ stats.totalClients }}</div>
+          <div class="stat-details">
+            <div class="detail-item">
+              <mat-icon class="small-icon success">description</mat-icon>
+              <span>{{ stats.clientsWithDocuments }} With Docs</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon class="small-icon warn">warning</mat-icon>
+              <span>{{ stats.clientsWithoutDocuments }} Pending</span>
+            </div>
+          </div>
+          <div class="stat-footer">
+            <span>{{ getDocumentCompletionPercentage() }}% Complete</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <mat-card class="roles-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>badge</mat-icon>
+          User Distribution by Role
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="roles-grid">
+          <div class="role-item admin-role">
+            <div class="role-icon-wrapper">
+              <mat-icon>admin_panel_settings</mat-icon>
+            </div>
+            <div class="role-info">
+              <span class="role-count">{{ stats.adminCount }}</span>
+              <span class="role-name">Administrators</span>
+            </div>
+          </div>
+
+          <div class="role-item rm-role">
+            <div class="role-icon-wrapper">
+              <mat-icon>manage_accounts</mat-icon>
+            </div>
+            <div class="role-info">
+              <span class="role-count">{{ stats.rmCount }}</span>
+              <span class="role-name">Relationship Managers</span>
+            </div>
+          </div>
+
+          <div class="role-item analyst-role">
+            <div class="role-icon-wrapper">
+              <mat-icon>analytics</mat-icon>
+            </div>
+            <div class="role-info">
+              <span class="role-count">{{ stats.analystCount }}</span>
+              <span class="role-name">Analysts</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="actions-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>flash_on</mat-icon>
+          Quick Actions
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="actions-grid">
+          <button mat-raised-button class="action-button" (click)="navigateToUsers()">
+            <mat-icon>person_add</mat-icon>
+            <div class="button-text">
+              <span class="button-title">Manage Users</span>
+              <span class="button-subtitle">View and manage all users</span>
+            </div>
+          </button>
+
+          <button mat-raised-button class="action-button" (click)="navigateToClients()">
+            <mat-icon>visibility</mat-icon>
+            <div class="button-text">
+              <span class="button-title">View Clients</span>
+              <span class="button-subtitle">Browse all client records</span>
+            </div>
+          </button>
+
+          <button mat-raised-button class="action-button" (click)="refreshData()">
+            <mat-icon>refresh</mat-icon>
+            <div class="button-text">
+              <span class="button-title">Refresh Data</span>
+              <span class="button-subtitle">Get latest statistics</span>
+            </div>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

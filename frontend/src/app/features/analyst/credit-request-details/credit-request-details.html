@@ -1,0 +1,283 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="header">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Credit Request Review</h1>
+  </div>
+
+  <!-- Success Message -->
+  <div class="success-box" *ngIf="successMessage">
+    <mat-icon>check_circle</mat-icon>
+    <span>{{ successMessage }}</span>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-box" *ngIf="errorMessage">
+    <mat-icon>error</mat-icon>
+    <span>{{ errorMessage }}</span>
+    <button mat-icon-button (click)="errorMessage = ''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Loading request details...</p>
+  </div>
+
+  <!-- Content -->
+  <div class="content-grid" *ngIf="!isLoading && creditRequest">
+    <!-- Status Card -->
+    <mat-card class="status-card">
+      <div class="status-header">
+        <mat-icon [class]="'status-icon ' + creditRequest.status.toLowerCase()">
+          {{ getStatusIcon(creditRequest.status) }}
+        </mat-icon>
+        <div class="status-info">
+          <h3>Request Status</h3>
+          <mat-chip
+            [highlighted]="true"
+            [color]="getStatusColor(creditRequest.status)"
+            class="status-chip"
+          >
+            {{ creditRequest.status }}
+          </mat-chip>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="status-details">
+        <div class="detail-item">
+          <span class="label">Request ID:</span>
+          <span class="value">{{ creditRequest.id }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Submitted On:</span>
+          <span class="value">{{ creditRequest.createdAt | date : 'dd MMM yyyy, hh:mm a' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Submitted By:</span>
+          <span class="value">{{ creditRequest.submittedBy }}</span>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Client Information Card -->
+    <mat-card class="info-card">
+      <div class="card-header">
+        <mat-icon>business</mat-icon>
+        <h2>Client Information</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="info-content" *ngIf="client">
+        <div class="info-item">
+          <mat-icon>business</mat-icon>
+          <div class="info-text">
+            <span class="label">Company Name</span>
+            <span class="value">{{ client.companyName }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>category</mat-icon>
+          <div class="info-text">
+            <span class="label">Industry</span>
+            <span class="value">{{ client.industry }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>person</mat-icon>
+          <div class="info-text">
+            <span class="label">Primary Contact</span>
+            <span class="value">{{ client.primaryContact.name }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>email</mat-icon>
+          <div class="info-text">
+            <span class="label">Email</span>
+            <span class="value">{{ client.primaryContact.email }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>phone</mat-icon>
+          <div class="info-text">
+            <span class="label">Phone</span>
+            <span class="value">{{ client.primaryContact.phone }}</span>
+          </div>
+        </div>
+
+        <div class="info-item highlight">
+          <mat-icon>currency_rupee</mat-icon>
+          <div class="info-text">
+            <span class="label">Annual Turnover</span>
+            <span class="value">₹{{ client.annualTurnover | number : '1.1-1' }} Crores</span>
+          </div>
+        </div>
+
+        <div class="info-item full-width">
+          <mat-icon>location_on</mat-icon>
+          <div class="info-text">
+            <span class="label">Address</span>
+            <span class="value">{{ client.address }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>description</mat-icon>
+          <div class="info-text">
+            <span class="label">Document Status</span>
+            <span
+              class="value"
+              [class.
+              success]="client. documentsSubmitted"
+              [class.warning]="!client.documentsSubmitted"
+            >
+              {{ client.documentsSubmitted ? 'Submitted' : 'Pending' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-content" *ngIf="!client">
+        <p class="no-data-text">Client information not available</p>
+      </div>
+    </mat-card>
+
+    <!-- Credit Request Details Card -->
+    <mat-card class="info-card">
+      <div class="card-header">
+        <mat-icon>request_quote</mat-icon>
+        <h2>Credit Request Details</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="info-content">
+        <div class="info-item amount-item">
+          <mat-icon>currency_rupee</mat-icon>
+          <div class="info-text">
+            <span class="label">Requested Amount</span>
+            <span class="value amount"
+              >₹{{ creditRequest.requestAmount / 10000000 | number : '1.2-2' }} Crores</span
+            >
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>schedule</mat-icon>
+          <div class="info-text">
+            <span class="label">Tenure</span>
+            <span class="value">{{ creditRequest.tenureMonths }} Months</span>
+          </div>
+        </div>
+
+        <div class="info-item full-width">
+          <mat-icon>description</mat-icon>
+          <div class="info-text">
+            <span class="label">Purpose</span>
+            <span class="value purpose">{{ creditRequest.purpose }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Review Form Card (Only for Pending Requests) -->
+    <mat-card class="review-card" *ngIf="isPending()">
+      <div class="card-header">
+        <mat-icon>rate_review</mat-icon>
+        <h2>Review Request</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="review-form">
+        <!-- Decision Radio Buttons -->
+        <div class="decision-section">
+          <h3>Decision *</h3>
+          <mat-radio-group formControlName="status" class="radio-group">
+            <mat-radio-button [value]="CreditRequestStatus.APPROVED" class="approve-radio">
+              <div class="radio-content">
+                <mat-icon>check_circle</mat-icon>
+                <span>Approve</span>
+              </div>
+            </mat-radio-button>
+            <mat-radio-button [value]="CreditRequestStatus.REJECTED" class="reject-radio">
+              <div class="radio-content">
+                <mat-icon>cancel</mat-icon>
+                <span>Reject</span>
+              </div>
+            </mat-radio-button>
+          </mat-radio-group>
+          <mat-error
+            *ngIf="
+              reviewForm.get('status')?.touched && reviewForm.get('status')?.hasError('required')
+            "
+          >
+            Please select a decision
+          </mat-error>
+        </div>
+
+        <!-- Remarks Textarea -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Remarks *</mat-label>
+          <textarea
+            matInput
+            formControlName="remarks"
+            rows="5"
+            placeholder="Provide detailed remarks for your decision (minimum 10 characters)"
+          ></textarea>
+          <mat-icon matPrefix>comment</mat-icon>
+          <mat-hint>Minimum 10 characters required</mat-hint>
+          <mat-error *ngIf="reviewForm.get('remarks')?.hasError('required')">
+            Remarks are required
+          </mat-error>
+          <mat-error *ngIf="reviewForm.get('remarks')?.hasError('minlength')">
+            Remarks must be at least 10 characters
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="goBack()" [disabled]="isSubmitting">
+            <mat-icon>close</mat-icon>
+            Cancel
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="isSubmitting || reviewForm.invalid"
+          >
+            <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+            <mat-icon *ngIf="!isSubmitting">send</mat-icon>
+            <span *ngIf="!isSubmitting">Submit Review</span>
+          </button>
+        </div>
+      </form>
+    </mat-card>
+
+    <!-- Existing Remarks Card (For Reviewed Requests) -->
+    <mat-card class="remarks-card" *ngIf="!isPending() && creditRequest.remarks">
+      <div class="card-header">
+        <mat-icon>comment</mat-icon>
+        <h2>Review Remarks</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="remarks-content">
+        <p>{{ creditRequest.remarks }}</p>
+      </div>
+    </mat-card>
+  </div>
+</div>

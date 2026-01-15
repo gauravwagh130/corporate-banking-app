@@ -1,0 +1,108 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 64px;
+  padding: 0 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #3f51b5 !important;  /* ✅ Force Material primary color */
+}
+
+.navbar-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-btn {
+  color: white ! important;  /* ✅ Force white color */
+}
+
+.logo-btn mat-icon {
+  color: white !important;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  color: white !important;  /* ✅ Force white color */
+}
+
+.app-title:hover {
+  opacity: 0.9;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background:  rgba(255, 255, 255, 0.15);  /* ✅ Slightly visible background */
+  border-radius: 20px;
+  color: white !important;  /* ✅ Force white color */
+}
+
+.user-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: white !important;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: white !important;
+}
+
+.logout-btn {
+  color: white !important;  /* ✅ Force white color */
+}
+
+.logout-btn mat-icon {
+  color: white !important;
+}
+
+.logout-btn:hover {
+  background:  rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Ensure Material toolbar has proper styling */
+::ng-deep .navbar.mat-toolbar {
+  background-color: #3f51b5 !important;
+  color: white !important;
+}
+
+@media (max-width: 768px) {
+  .app-title {
+    font-size: 16px;
+  }
+  
+  .user-name {
+    display: none;
+  }
+  
+  .navbar {
+    padding: 0 8px;
+  }
+}

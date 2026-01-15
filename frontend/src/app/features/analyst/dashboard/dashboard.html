@@ -1,0 +1,82 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Analyst Dashboard</h1>
+      <p *ngIf="currentUser">Welcome, {{ currentUser.username }}!</p>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button class="header-action-btn" (click)="navigateToCreditRequests()">
+        <mat-icon>request_quote</mat-icon>
+        All Request
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Loading dashboard...</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid" *ngIf="!isLoading">
+    <mat-card class="stat-card total-card" (click)="navigateToCreditRequests()">
+      <div class="stat-icon">
+        <mat-icon>request_quote</mat-icon>
+      </div>
+      <div class="stat-info">
+        <h2>{{ totalRequests }}</h2>
+        <p>Total Requests</p>
+      </div>
+    </mat-card>
+    <mat-card class="stat-card pending-card">
+      <div class="stat-clickable" (click)="navigateToPendingRequests()">
+        <div class="stat-icon">
+          <mat-icon>pending</mat-icon>
+        </div>
+        <h2>{{ pendingRequests }}</h2>
+        <p>Pending Review</p>
+      </div>
+    </mat-card>
+    <mat-card class="stat-card approved-card">
+      <div class="stat-clickable" (click)="navigateToApprovedRequests()">
+        <div class="stat-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-info">
+        <h2>{{ approvedRequests }}</h2>
+        <p>Approved</p>
+      </div>
+      </div>
+    </mat-card>
+  
+    <mat-card class="stat-card rejected-card">
+      <div class="stat-clickable" (click)="navigateToRejectedRequest()">
+        <div class="stat-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-info">
+        <h2>{{ rejectedRequests }}</h2>
+        <p>Rejected</p>
+      </div>
+      </div>
+    </mat-card>
+    
+  </div>
+
+  <!-- Quick Actions -->
+  <mat-card class="actions-card" *ngIf="!isLoading">
+    <h2>Quick Actions</h2>
+    <div class="actions-grid">
+      <button mat-raised-button color="primary" (click)="navigateToCreditRequests()">
+        <mat-icon>list</mat-icon>
+        All Requests
+      </button>
+      <button mat-raised-button color="accent" (click)="navigateToPendingRequests()">
+        <mat-icon>pending_actions</mat-icon>
+        Pending Requests
+      </button>
+    </div>
+  </mat-card>
+</div>

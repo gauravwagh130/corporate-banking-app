@@ -1,0 +1,56 @@
+<div class="login-page">
+  <mat-card class="login-card">
+    <!-- Logo -->
+    <div class="logo">
+      <mat-icon>account_balance</mat-icon>
+    </div>
+
+    <!-- Title -->
+    <h1>Corporate Banking</h1>
+    <p class="subtitle">Login to continue</p>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="errorMessage">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="admin@bank.com" />
+        <mat-icon matPrefix>email</mat-icon>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')"
+          >Email is required</mat-error
+        >
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Invalid email</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
+        <mat-icon matPrefix>lock</mat-icon>
+        <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error>Password is required</mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        <span *ngIf="!isLoading">Login</span>
+      </button>
+    </form>
+
+    <!-- Quick Login -->
+    <div class="quick-login">
+      <p>Quick Login:</p>
+      <div class="quick-buttons">
+        <button mat-button (click)="quickLogin('admin@bank.com')">Admin</button>
+        <button mat-button (click)="quickLogin('rm@bank.com')">RM</button>
+        <button mat-button (click)="quickLogin('analyst@bank.com')">Analyst</button>
+      </div>
+    </div>
+  </mat-card>
+</div>

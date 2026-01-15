@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: corporate-banking-client-credit-management-system
+
+  data:
+    mongodb:
+      auto-index-creation: true
+
+  web:
+    cors:
+      allowed-origins: http://localhost:4200
+      allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+      allowed-headers: "*"
+      allow-credentials: true
+
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    topic:
+      credit-request-events: credit-request-events
+    consumer:
+      group-id: corporate-banking-consumer-group
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+
+server:
+  port: 8080
+
+jwt:
+  secret: TXlDb3Jwb3JhdGVCYW5raW5nU2VjdXJlSldUU2VjcmV0S2V5MTIzNDU2
+  expiration: 86400000

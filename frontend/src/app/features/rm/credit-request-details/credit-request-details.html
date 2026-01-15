@@ -1,0 +1,190 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="header">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Credit Request Details</h1>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-box" *ngIf="errorMessage">
+    <mat-icon>error</mat-icon>
+    <span>{{ errorMessage }}</span>
+    <button mat-icon-button (click)="errorMessage = ''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Loading request details...</p>
+  </div>
+
+  <!-- Content -->
+  <div class="content-grid" *ngIf="!isLoading && creditRequest">
+    <!-- Status Card -->
+    <mat-card class="status-card">
+      <div class="status-header">
+        <mat-icon [class]="'status-icon ' + creditRequest.status.toLowerCase()">
+          {{ getStatusIcon(creditRequest.status) }}
+        </mat-icon>
+        <div class="status-info">
+          <h3>Request Status</h3>
+          <mat-chip
+            [highlighted]="true"
+            [color]="getStatusColor(creditRequest.status)"
+            class="status-chip"
+          >
+            {{ creditRequest.status }}
+          </mat-chip>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="status-details">
+        <div class="detail-item">
+          <span class="label">Request ID:</span>
+          <span class="value">{{ creditRequest.id }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Submitted On:</span>
+          <span class="value">{{ creditRequest.createdAt | date : 'dd MMM yyyy, hh:mm a' }}</span>
+        </div>
+        <div class="detail-item" *ngIf="creditRequest.remarks">
+          <span class="label">Remarks:</span>
+          <span class="value remarks">{{ creditRequest.remarks }}</span>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Client Information Card -->
+    <mat-card class="info-card">
+      <div class="card-header">
+        <mat-icon>business</mat-icon>
+        <h2>Client Information</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="info-content" *ngIf="client">
+        <div class="info-item">
+          <mat-icon>business</mat-icon>
+          <div class="info-text">
+            <span class="label">Company Name</span>
+            <span class="value">{{ client.companyName }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>category</mat-icon>
+          <div class="info-text">
+            <span class="label">Industry</span>
+            <span class="value">{{ client.industry }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>person</mat-icon>
+          <div class="info-text">
+            <span class="label">Primary Contact</span>
+            <span class="value">{{ client.primaryContact.name }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>email</mat-icon>
+          <div class="info-text">
+            <span class="label">Email</span>
+            <span class="value">{{ client.primaryContact.email }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>phone</mat-icon>
+          <div class="info-text">
+            <span class="label">Phone</span>
+            <span class="value">{{ client.primaryContact.phone }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>currency_rupee</mat-icon>
+          <div class="info-text">
+            <span class="label">Annual Turnover</span>
+            <span class="value">₹{{ client.annualTurnover | number : '1.1-1' }} Crores</span>
+          </div>
+        </div>
+
+        <div class="info-item full-width">
+          <mat-icon>location_on</mat-icon>
+          <div class="info-text">
+            <span class="label">Address</span>
+            <span class="value">{{ client.address }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-content" *ngIf="!client">
+        <p class="no-data-text">Client information not available</p>
+      </div>
+    </mat-card>
+
+    <!-- Credit Request Details Card -->
+    <mat-card class="info-card">
+      <div class="card-header">
+        <mat-icon>request_quote</mat-icon>
+        <h2>Credit Request Details</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="info-content">
+        <div class="info-item highlight">
+          <mat-icon>currency_rupee</mat-icon>
+          <div class="info-text">
+            <span class="label">Requested Amount</span>
+            <span class="value amount"
+              >₹{{ creditRequest.requestAmount / 10000000 | number : '1.2-2' }} Crores</span
+            >
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>schedule</mat-icon>
+          <div class="info-text">
+            <span class="label">Tenure</span>
+            <span class="value">{{ creditRequest.tenureMonths }} Months</span>
+          </div>
+        </div>
+
+        <div class="info-item full-width">
+          <mat-icon>description</mat-icon>
+          <div class="info-text">
+            <span class="label">Purpose</span>
+            <span class="value purpose">{{ creditRequest.purpose }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Remarks Card (if exists) -->
+    <mat-card
+      class="remarks-card"
+      *ngIf="creditRequest.remarks && creditRequest.status !== CreditRequestStatus.PENDING"
+    >
+      <div class="card-header">
+        <mat-icon>comment</mat-icon>
+        <h2>Analyst Remarks</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="remarks-content">
+        <p>{{ creditRequest.remarks }}</p>
+      </div>
+    </mat-card>
+  </div>
+</div>

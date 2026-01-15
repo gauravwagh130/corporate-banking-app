@@ -1,0 +1,21 @@
+<mat-toolbar color="primary" class="navbar" *ngIf="showNavbar && currentUser">
+  <div class="navbar-container">
+    <div class="navbar-left">
+      <button mat-icon-button (click)="goToDashboard()" class="logo-btn">
+        <mat-icon>account_balance</mat-icon>
+      </button>
+      <span class="app-title" (click)="goToDashboard()">Corporate Banking</span>
+    </div>
+    
+    <div class="navbar-right">
+      <span class="user-info">
+        <mat-icon class="user-icon">person</mat-icon>
+        <span class="user-name">{{ currentUser.username }}</span>
+      </span>
+      
+      <button mat-icon-button (click)="logout()" class="logout-btn" title="Logout">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-toolbar>

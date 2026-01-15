@@ -1,0 +1,138 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="header">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Client Details</h1>
+    <!-- ✅ Show button when NOT loading AND client exists -->
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="editClient()"
+      *ngIf="!isLoading && client"
+      class="edit-btn"
+    >
+      <mat-icon>edit</mat-icon>
+      Edit Client
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-box" *ngIf="errorMessage && !isLoading">
+    <mat-icon>error</mat-icon>
+    <span>{{ errorMessage }}</span>
+    <button mat-button (click)="loadClientDetails()">
+      <mat-icon>refresh</mat-icon>
+      Retry
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading client details...</p>
+  </div>
+
+
+
+  <!-- Content -->
+  <div class="content-grid" *ngIf="!isLoading && client && !errorMessage">
+    <!-- Company Information -->
+    <mat-card class="info-card">
+      <div class="card-header">
+        <mat-icon>business</mat-icon>
+        <h2>Company Information</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="info-content">
+        <div class="info-item">
+          <mat-icon>business</mat-icon>
+          <div class="info-text">
+            <span class="label">Company Name</span>
+            <span class="value">{{ client.companyName }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>category</mat-icon>
+          <div class="info-text">
+            <span class="label">Industry</span>
+            <span class="value">{{ client.industry }}</span>
+          </div>
+        </div>
+
+        <div class="info-item highlight">
+          <mat-icon>currency_rupee</mat-icon>
+          <div class="info-text">
+            <span class="label">Annual Turnover</span>
+            <span class="value amount">₹{{ client.annualTurnover | number : '1.1-1' }} Crores</span>
+          </div>
+        </div>
+
+        <div class="info-item full-width">
+          <mat-icon>location_on</mat-icon>
+          <div class="info-text">
+            <span class="label">Address</span>
+            <span class="value">{{ client.address }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Contact Information -->
+    <mat-card class="info-card">
+      <div class="card-header">
+        <mat-icon>contact_phone</mat-icon>
+        <h2>Primary Contact</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="info-content">
+        <div class="info-item">
+          <mat-icon>person</mat-icon>
+          <div class="info-text">
+            <span class="label">Contact Name</span>
+            <span class="value">{{ client.primaryContact.name }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>email</mat-icon>
+          <div class="info-text">
+            <span class="label">Email</span>
+            <span class="value">{{ client.primaryContact.email }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>phone</mat-icon>
+          <div class="info-text">
+            <span class="label">Phone</span>
+            <span class="value">{{ client.primaryContact.phone }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Document Status -->
+    <mat-card class="status-card">
+      <div class="card-header">
+        <mat-icon>description</mat-icon>
+        <h2>Document Status</h2>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="status-content">
+        <mat-chip [highlighted]="true" [color]="client.documentsSubmitted ? 'primary' : 'warn'">
+          <mat-icon>{{ client.documentsSubmitted ? 'check_circle' : 'pending' }}</mat-icon>
+          {{ client.documentsSubmitted ? 'Documents Submitted' : 'Documents Pending' }}
+        </mat-chip>
+      </div>
+    </mat-card>
+  </div>
+</div>
